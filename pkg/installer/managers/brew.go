@@ -55,7 +55,7 @@ func (mgr BrewManager) Upgrade(pkg domain.Package) error {
 		fmt.Println(installer.ErrPackageNotInstalled)
 		return mgr.Install(pkg)
 	}
-	cmd := mgr.buildManageCmd("uninstall", pkg)
+	cmd := mgr.buildManageCmd("upgrade", pkg)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	fmt.Println("Upgrading", pkg.Name)
@@ -74,7 +74,7 @@ func (mgr BrewManager) buildManageCmd(action string, pkg domain.Package) *exec.C
 }
 
 func (mgr BrewManager) IsInstalled(pkg domain.Package) bool {
-	cmd := exec.Command("brew", "list", "--version", pkg.InstallLogic.Identifier)
+	cmd := exec.Command("brew", "list", "--versions", pkg.InstallLogic.Identifier)
 	return cmd.Run() == nil
 }
 
