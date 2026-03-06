@@ -77,24 +77,3 @@ func (mgr BrewManager) IsInstalled(pkg domain.Package) bool {
 	cmd := exec.Command("brew", "list", "--versions", pkg.InstallLogic.Identifier)
 	return cmd.Run() == nil
 }
-
-func RunInstall(mgr installer.Manager, pkg domain.Package, forced bool) error {
-	if forced {
-		return mgr.Upgrade(pkg)
-	}
-	if mgr.IsInstalled(pkg) {
-		fmt.Println(installer.ErrPackageAlreadyInstalled)
-		return nil
-	}
-	return mgr.Install(pkg)
-}
-func RunUninstall(mgr installer.Manager, pkg domain.Package) error {
-	if err := mgr.Uninstall(pkg); err != nil {
-		if errors.Is(err, installer.ErrPackageNotInstalled) {
-			fmt.Println("Skipping", pkg.Name)
-			return nil
-		}
-		return err
-	}
-	return nil
-}
