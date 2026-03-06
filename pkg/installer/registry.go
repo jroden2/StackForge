@@ -2,7 +2,7 @@ package installer
 
 var registry map[string]Manager
 
-func RegistryManager(mgr Manager) {
+func RegisterManager(mgr Manager) {
 	registry[mgr.Name()] = mgr
 }
 

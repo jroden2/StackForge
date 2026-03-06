@@ -1,6 +1,16 @@
 package installer
 
-import "github.com/jroden2/stackforge/pkg/domain"
+import (
+	"errors"
+
+	"github.com/jroden2/stackforge/pkg/domain"
+)
+
+var (
+	ErrPackageNotInstalled     = errors.New("package not installed")
+	ErrPackageAlreadyInstalled = errors.New("package already installed")
+	ErrUninstallNotSupported   = errors.New("uninstall not supported for manager")
+)
 
 type Manager interface {
 	Name() string
