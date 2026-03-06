@@ -2,24 +2,35 @@
   "bundle_id": "Java Dev pack - 6 Mar 2026",
   "title": "Java Development pack",
   "description": "Essential toolset for development",
-  "version" : "0.0.1",
-  "packages" : [
+  "version": "0.0.1",
+  "packages": [
     {
       "id": "temurin-21",
-      "name": "Java temurin SDK 21",
-      "manager" : "homebrew",
-      "install_logic" : {
+      "name": "Java Temurin SDK 21",
+      "manager": "homebrew",
+      "install_logic": {
         "method": "cask",
-        "identifier": "termurin@21"
+        "identifier": "temurin@21"
       }
     },
     {
       "id": "maven",
       "name": "Apache Maven",
-      "manager" : "homebrew",
-      "install_logic" : {
+      "manager": "homebrew",
+      "install_logic": {
         "method": "formula",
         "identifier": "maven"
+      }
+    },
+    {
+      "id": "sdkman",
+      "name": "SDKMAN",
+      "manager": "curl",
+      "install_logic": {
+        "identifier": "sdkman",
+        "method": "script",
+        "installScript": "https://get.sdkman.io",
+        "uninstallScript": "https://get.sdkman.io/uninstall"
       }
     }
   ]
