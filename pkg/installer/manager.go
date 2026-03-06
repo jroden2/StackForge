@@ -1,6 +1,8 @@
 package installer
 
+import "github.com/jroden2/stackforge/pkg/domain"
+
 type Manager interface {
 	Name() string
-	Install() error
+	Install(pkg domain.Package) error
 }
