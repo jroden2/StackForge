@@ -9,46 +9,50 @@ import (
 
 	"github.com/jroden2/stackforge/pkg/bundle"
 	"github.com/jroden2/stackforge/pkg/installer"
+
+	_ "github.com/jroden2/stackforge/pkg/installer/managers"
 )
 
 func main() {
 	fmt.Println("Mac setup tool")
-	if bundles, err := bundle.LoadBundles("./bundles/"); err != nil {
-		fmt.Println("Failed to load bundles", err)
-		return
-	} else {
-		if len(bundles) == 0 {
-			fmt.Println("No bundles found")
-			return
-		}
 
-		fmt.Printf("Found %d bundles\n", len(bundles))
-		for i, b := range bundles {
-			fmt.Printf("%d %s\n", i+1, b.Title)
-			fmt.Printf("  %s\n", b.Description)
-		}
+	bundles, err := bundle.LoadBundles("./bundles/")
+	if err != nil {
+		fmt.Println("Failed to load bundles:", err)
+		os.Exit(1)
+	}
 
-		fmt.Println("Choose a bundle:")
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
+	if len(bundles) == 0 {
+		fmt.Println("No bundles found")
+		os.Exit(1)
+	}
 
-		input = strings.TrimSpace(input)
+	fmt.Printf("Found %d bundles\n\n", len(bundles))
+	for i, b := range bundles {
+		fmt.Printf("  %d) %s - %s\n", i+1, b.Title, b.Description)
+	}
 
-		selection, err := strconv.Atoi(input)
-		if err != nil {
-			fmt.Println("Invalid selection")
-			return
-		}
+	fmt.Print("\nChoose a bundle (0 to exit): ")
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Failed to read input:", err)
+		os.Exit(1)
+	}
 
-		index := selection - 1
-		if index < 0 || index >= len(bundles) {
-			fmt.Println("Invalid selection")
-			return
-		}
+	selection, err := strconv.Atoi(strings.TrimSpace(input))
+	if err != nil || selection < 0 || selection > len(bundles) {
+		fmt.Println("Invalid selection")
+		os.Exit(1)
+	}
 
-		err = installer.InstallBundle(bundles[index])
-		if err != nil {
-			fmt.Println("Installation failed:", err)
-		}
+	if selection == 0 {
+		fmt.Println("Exiting")
+		os.Exit(0)
+	}
+
+	if err := installer.InstallBundle(bundles[selection-1]); err != nil {
+		fmt.Println("Installation failed:", err)
+		os.Exit(1)
 	}
 }

@@ -10,19 +10,25 @@ import (
 
 func LoadBundles(dir string) ([]domain.Bundle, error) {
 	var bundles []domain.Bundle
-	if files, err := filepath.Glob(filepath.Join(dir, "*.json")); err != nil {
-		return bundles, err
-	} else {
-		for _, file := range files {
-			if data, err := os.ReadFile(file); err != nil {
-				return bundles, err
-			} else {
-				var bundle domain.Bundle
-				if err := json.Unmarshal(data, &bundle); err != nil {
-					return bundles, err
-				}
-				bundles = append(bundles, bundle)
-			}
-		}
+
+	files, err := filepath.Glob(filepath.Join(dir, "*.json"))
+	if err != nil {
+		return nil, err
 	}
+
+	for _, file := range files {
+		data, err := os.ReadFile(file)
+		if err != nil {
+			return nil, err
+		}
+
+		var bundle domain.Bundle
+		if err := json.Unmarshal(data, &bundle); err != nil {
+			return nil, err
+		}
+
+		bundles = append(bundles, bundle)
+	}
+
+	return bundles, nil
 }

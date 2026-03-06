@@ -1,7 +1,6 @@
 package managers
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
