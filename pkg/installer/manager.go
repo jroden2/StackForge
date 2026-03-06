@@ -10,6 +10,7 @@ var (
 	ErrPackageNotInstalled     = errors.New("package not installed")
 	ErrPackageAlreadyInstalled = errors.New("package already installed")
 	ErrUninstallNotSupported   = errors.New("uninstall not supported for manager")
+	ErrUpgradeNotSupported     = errors.New("upgrade not supported for this manager")
 )
 
 type Manager interface {
