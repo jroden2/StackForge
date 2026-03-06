@@ -15,7 +15,7 @@ func InstallBundle(bundle domain.Bundle) error {
 		} else {
 			err := manager.Install(pkg)
 			if err != nil {
-				fmt.Printf("Package \"%s\" install failed: %s\n", pkg.Name, err)
+				fmt.Printf("package \"%s\" install failed: %s\n", pkg.Name, err)
 				return err
 			}
 		}

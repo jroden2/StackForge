@@ -20,24 +20,25 @@ func (mgr BrewManager) Name() string {
 }
 
 func (mgr BrewManager) Install(pkg domain.Package) error {
+	fmt.Println("Installing", pkg.Name)
 	if mgr.IsInstalled(pkg) {
-		fmt.Println(installer.ErrPackageAlreadyInstalled)
-		return fmt.Errorf("%w", installer.ErrPackageAlreadyInstalled)
+		fmt.Println(fmt.Sprintf("package %s already installed", pkg.Name))
+		return nil
 	}
 	cmd := mgr.buildManageCmd("install", pkg)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	fmt.Println("Installing", pkg.Name)
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("installing %s failed: %w", pkg.InstallLogic.Identifier, err)
 	}
+	fmt.Printf("Installed %s\n", pkg.Name)
 	return nil
 }
 
 func (mgr BrewManager) Uninstall(pkg domain.Package) error {
 	if !mgr.IsInstalled(pkg) {
 		fmt.Println(installer.ErrPackageNotInstalled)
-		return fmt.Errorf("%w", installer.ErrPackageNotInstalled)
+		return nil
 	}
 	cmd := mgr.buildManageCmd("uninstall", pkg)
 	cmd.Stdout = os.Stdout

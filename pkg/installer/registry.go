@@ -1,7 +1,5 @@
 package installer
 
-import "fmt"
-
 var registry = map[string]Manager{}
 
 func RegisterManager(mgr Manager) {
@@ -10,6 +8,5 @@ func RegisterManager(mgr Manager) {
 
 func GetManager(name string) (Manager, bool) {
 	mgr, ok := registry[name]
-	fmt.Println(name)
 	return mgr, ok
 }
