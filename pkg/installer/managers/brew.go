@@ -77,3 +77,8 @@ func (mgr BrewManager) IsInstalled(pkg domain.Package) bool {
 	cmd := exec.Command("brew", "list", "--versions", pkg.InstallLogic.Identifier)
 	return cmd.Run() == nil
 }
+
+func (mgr BrewManager) checkDependencies() error {
+	// Todo: call the dep check - install if needed
+	return nil
+}
