@@ -10,12 +10,10 @@ permissions:
 
 jobs:
   build:
-    name: Build binaries
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        goos: [linux, darwin, windows]
         goarch: [amd64, arm64]
 
     steps:
@@ -28,41 +26,35 @@ jobs:
           go-version: "1.22"
           cache: true
 
-      - name: Get version from tag
+      - name: Extract version
         id: vars
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Build binary
+      - name: Build macOS binary
         run: |
           mkdir -p build
-          
-          EXT=""
-          if [ "${{ matrix.goos }}" = "windows" ]; then
-            EXT=".exe"
-          fi
 
-          OUTPUT="stackforge-${{ steps.vars.outputs.VERSION }}-${{ matrix.goos }}-${{ matrix.goarch }}$EXT"
+          OUTPUT="stackforge-${{ steps.vars.outputs.VERSION }}-darwin-${{ matrix.goarch }}"
 
-          GOOS=${{ matrix.goos }} \
+          GOOS=darwin \
           GOARCH=${{ matrix.goarch }} \
-          go build -o build/$OUTPUT ./cmd/stackforge
+          go build -o build/$OUTPUT ./cmd
 
-      - name: Upload build artifacts
+      - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: binaries
+          name: stackforge-binaries
           path: build/*
 
   release:
-    name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts
+      - name: Download binaries
         uses: actions/download-artifact@v4
         with:
-          name: binaries
+          name: stackforge-binaries
           path: build
 
       - name: Create GitHub Release
