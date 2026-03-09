@@ -17,14 +17,11 @@ jobs:
         goarch: [amd64, arm64]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-          cache: true
 
       - name: Extract version
         id: vars
@@ -40,10 +37,10 @@ jobs:
           GOARCH=${{ matrix.goarch }} \
           go build -o build/$OUTPUT ./cmd
 
-      - name: Upload binaries
+      - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: stackforge-binaries
+          name: stackforge-${{ matrix.goarch }}
           path: build/*
 
   release:
@@ -51,11 +48,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download binaries
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: stackforge-binaries
           path: build
+          merge-multiple: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
