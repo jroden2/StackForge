@@ -26,17 +26,18 @@ jobs:
       - name: Install signing certificate
         env:
           CERTIFICATE: ${{ secrets.MAC_CERTIFICATE }}
+          CERTIFICATE_PWD: ${{ secrets.MAC_CERTIFICATE_PWD }}
         run: |
           echo "$CERTIFICATE" | base64 --decode > cert.p12
-
+          
           security create-keychain -p build build.keychain
           security unlock-keychain -p build build.keychain
-
+          
           security import cert.p12 \
             -k build.keychain \
-            -P "" \
+            -P "$CERTIFICATE_PWD" \
             -T /usr/bin/codesign
-
+          
           security list-keychains -d user -s build.keychain
 
       - name: Build macOS binaries
